@@ -1,0 +1,25 @@
+version: '3.1'
+services:
+  wordpress:
+    image: wordpress:php8.0-apache
+    container_name: around-wordpress
+    ports:
+      - 80:80
+    environment:
+      WORDPRESS_DB_HOST: ${MYSQL_HOST}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DB}
+    volumes:
+      - ./wordpress:/var/www/html
+    links:
+      - mysql:mysql
+  mysql:
+    image: mysql:8.0.13
+    container_name: around-mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./mysql:/var/lib/mysql
